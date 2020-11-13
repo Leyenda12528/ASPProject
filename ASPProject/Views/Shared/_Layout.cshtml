@@ -1,0 +1,82 @@
+﻿@using ASPProject.Models;
+
+@{
+    Usuario user = (Usuario)Session["login"];
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/v4/bootstrap2.min.css" rel="stylesheet" />
+    <link href="~/Content/v4/MyStyle.css" rel="stylesheet" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @Scripts.Render("~/Scripts/v4/Vue.js")
+    @Scripts.Render("~/Scripts/v4/axios.min.js")
+    @Scripts.Render("~/Scripts/v4/jquery-3.5.1.slim.min.js")
+    @Scripts.Render("~/Scripts/v4/bootstrap.min.js")
+    @RenderSection("scripts", required: false)
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-white bg-light-blue">
+        <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+            <img src="~/Imagenes/cshear.svg" width="30" height="30" alt="">
+            Platform
+        </a>
+
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse justify-content-between">
+            <ul class="navbar-nav">
+                <li>@Html.ActionLink("Acerca de", "About", "Home", null, new { @class = "nav-link" })</li>
+            </ul>
+            @if (user == null)
+            {
+                <ul class="navbar-nav">
+                    @Html.ActionLink("Iniciar Sesión", "Login", "Usuarios", null, new { @class = "nav-link" })
+                    @Html.ActionLink("Registrar", "Registrar", "Usuarios", null, new { @class = "nav-link" })
+                </ul>
+            }
+            else
+            {
+                switch (user.RolId)
+                {
+                    case 1:
+                        <ul class="navbar-nav">
+                            @Html.ActionLink("Mis Cursos", "Index", "Cursos", null, new { @class = "nav-link" })
+                            @Html.ActionLink("Crear Curso", "Crear", "Cursos", null, new { @class = "nav-link" })
+                        </ul>
+                        break;
+                    case 2:
+                        <ul class="navbar-nav">
+                            @Html.ActionLink("Mis Cursos", "Index", "Cursos", null, new { @class = "nav-link" })
+                            @Html.ActionLink("Crear Curso", "Crear", "Cursos", null, new { @class = "nav-link" })
+                        </ul>
+                        break;
+                    case 3:
+                        <ul class="navbar-nav">
+                            @Html.ActionLink("Categoria", "Index", "Categoria", null, new { @class = "nav-link" })
+                            @Html.ActionLink("Usuarios", "Listar", "Usuario", null, new { @class = "nav-link" })
+                        </ul>
+                        break;
+                }
+                <ul class="navbar-nav">
+                    @Html.ActionLink("Cerrar Sesión", "Logout", "Usuarios", null, new { @class = "nav-link" })
+                </ul>
+            }
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Platform Cursos</p>
+        </footer>
+    </div>
+
+</body>
+</html>

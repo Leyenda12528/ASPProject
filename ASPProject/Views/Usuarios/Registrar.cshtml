@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "Registrar";
+}
+
+<div id="app">
+    <h2>Crear Cuenta</h2>
+    <div class="d-flex justify-content-center">
+        <div class="w-75 form-row">
+            <div class="col-md-6">
+                <label class="font-weight-bold">{{Registro.nombre.text}}</label>
+                <input type="text" class="form-control rounded-pill" v-model="Registro.nombre.value"
+                       v-bind:class="{'is-invalid' : Registro.nombre.invalido}"
+                       :placeholder="Registro.nombre.placeholder" />
+                <div class="invalid-feedback">
+                    {{Registro.nombre.error}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="font-weight-bold">{{Registro.apellido.text}}</label>
+                <input type="text" class="form-control rounded-pill" v-model="Registro.apellido.value"
+                       v-bind:class="{'is-invalid' : Registro.apellido.invalido}"
+                       :placeholder="Registro.apellido.placeholder" />
+                <div class="invalid-feedback">
+                    {{Registro.apellido.error}}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="font-weight-bold">{{Registro.fecha.text}}</label>
+                <input type="date" class="form-control rounded-pill" v-model="Registro.fecha.value"
+                       v-bind:class="{'is-invalid' : Registro.fecha.invalido}"
+                       :placeholder="Registro.fecha.placeholder" />
+                <div class="invalid-feedback">
+                    {{Registro.fecha.error}}
+                </div>
+            </div>
+            <div class="col-md-9">
+                <label class="font-weight-bold">{{Registro.direccion.text}}</label>
+                <input type="text" class="form-control rounded-pill" v-model="Registro.direccion.value"
+                       v-bind:class="{'is-invalid' : Registro.direccion.invalido}"
+                       :placeholder="Registro.direccion.placeholder" />
+                <div class="invalid-feedback">
+                    {{Registro.direccion.error}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="font-weight-bold">{{Registro.telefono.text}}</label>
+                <input type="text" class="form-control rounded-pill" v-model="Registro.telefono.value"
+                       v-bind:class="{'is-invalid' : Registro.telefono.invalido}"
+                       :placeholder="Registro.telefono.placeholder" />
+                <div class="invalid-feedback">
+                    {{Registro.telefono.error}}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <label class="font-weight-bold">{{Registro.correo.text}}</label>
+                <input type="email" class="form-control rounded-pill" v-model="Registro.correo.value"
+                       v-bind:class="{'is-invalid' : Registro.correo.invalido}"
+                       :placeholder="Registro.correo.placeholder" />
+                <div class="invalid-feedback">
+                    {{Registro.correo.error}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="font-weight-bold">{{Registro.password.text}}</label>
+                <input type="password" class="form-control rounded-pill" v-model="Registro.password.value"
+                       v-bind:class="{'is-invalid' : Registro.password.invalido}"
+                       :placeholder="Registro.password.placeholder" />
+                <div class="invalid-feedback">
+                    {{Registro.password.error}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="font-weight-bold">{{Registro.rol.text}}</label>
+                <select class="form-control rounded-pill" v-model="Registro.rol.value"
+                        v-bind:class="{'is-invalid' : Registro.rol.invalido}">
+                    <option disabled value="">{{Registro.rol.placeholder}}</option>
+                    <option v-for="opcion in Registro.rol.data" v-bind:value="opcion.ID">{{opcion.Name}}</option>
+                </select>
+                <div class="invalid-feedback">
+                    {{Registro.rol.error}}
+                </div>
+            </div>
+            <div class="col-md-12 rol-descrip">
+                <em>{{Registro.rol.descripcion}}</em>
+            </div>
+            <div class="col-md-12">
+                <button type="button" class="btn btn-block btn-primary2 rounded-pill font-weight-bold mt-3" v-on:click="registrar"
+                        :disabled="Registro.Boton.disabled">{{Registro.Boton.texto}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@Scripts.Render("~/Scripts/v4/Usuarios/Registrar.js")
