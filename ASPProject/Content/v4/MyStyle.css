@@ -23,6 +23,11 @@
 .curso:hover {
     box-shadow: 0 0.5rem 2rem rgba(0,125,255,.5) !important;
 }
+/** W */
+.icono-in-btn{
+    width: 25px;
+    font-weight: 700;
+}
 
 /*  H */
 .h-68{

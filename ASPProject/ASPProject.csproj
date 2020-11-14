@@ -179,6 +179,7 @@
     <Content Include="Scripts\v4\axios.min.js" />
     <Content Include="Scripts\v4\Categoria\Categoria.js" />
     <Content Include="Scripts\v4\Cursos\MyCursos.js" />
+    <Content Include="Scripts\v4\Cursos\MyDetalle.js" />
     <Content Include="Scripts\v4\jquery-3.5.1.slim.min.js" />
     <Content Include="Scripts\v4\Usuarios\Registrar.js" />
     <Content Include="Scripts\v4\Vue.js" />
@@ -200,6 +201,7 @@
     <Content Include="Views\Usuarios\Registrar.cshtml" />
     <Content Include="Views\Cursos\MyCursos.cshtml" />
     <Content Include="Views\Categorias\Index.cshtml" />
+    <Content Include="Views\Cursos\DetalleMy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

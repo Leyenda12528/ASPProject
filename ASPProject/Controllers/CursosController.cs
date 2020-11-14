@@ -157,36 +157,53 @@ namespace ASPProject.Controllers
             } else result = new { valido = false, tipo = 1, datos = new List<GCursos1>() };
             return Json(result);
         }
-
-
-
-
-
-
-
-
-
-        // GET: Cursos/Details/5
+        //-----------------------------------------------------------------------------
+        // GET: Cursos/Details/
+        [ActionName("DetalleMy")]
         public ActionResult Details(int id)
         {
+            ViewBag.ID = id;
             return View();
         }
-        
-        
-        // POST: Cursos/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        //  GET: Cursos/Detalle
+        [ActionName("GDetalleMy")]
+        public ActionResult GDetails(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            Usuario usuario = (Usuario)Session["login"];
+            var result = new { valido = false, tipo = 0, datos = new GCursoD1() };
+            //  GET DATOS GENERALES DE CURSO
+            var Dato = App.Curso.ToList()
+                    .Where(n => n.CursoId == id && n.UsuarioId == 1)
+                    .Select(n =>
+                       new GCursoD1
+                       {
+                           ID = n.CursoId,
+                           Name = n.Titulo,
+                           Descripcion = n.Descripcion,
+                           Imagen = (n.Imagen != null) ? n.Imagen : "/Imagenes/sinFoto.png",
+                           IDCategoria = n.CategoriaId,
+                           TCategoria = App.Categoria.Find(n.CategoriaId).Nombre,
+                           Temas = App.ContenidoCurso.ToList()
+                                    .Where(a => a.CursoId == id)
+                                    .Select(a => new CCurso {
+                                        ID = a.ContenidoCursoId,
+                                        Name = a.Nombre,
+                                        Descripcion = a.Descripcion,
+                                        Contenido = a.Contenido
+                                    })
+                                    .ToList(),
+                       }).First();
+            //  GET CONTENIDO DE CURSO
+            result = new { valido = true, tipo = 0, datos = Dato };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+        // POST: Cursos/CreateC/
+        [ActionName("CreateC")]
+        [HttpPost]
+        public  ActionResult CrearContenido()
+        {
+            return View();
         }
     }
 }

@@ -94,9 +94,9 @@
                             {{Modal.Boton.texto}}
                         </button>
                         <div v-else class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary2 rounded-pill font-weight-bold mt-3">
+                            <a class="btn btn-primary2 rounded-pill font-weight-bold mt-3" :href="'/Cursos/DetalleMy/' + Modal.dato.ID" role="button">
                                 Contenido Curso
-                            </button>
+                            </a>
                             <button type="button" class="btn btn-primary2 rounded-pill font-weight-bold mt-3" v-on:click="agregar"
                                     :disabled="Modal.Boton.disabled">
                                 {{Modal.Boton.texto}}
