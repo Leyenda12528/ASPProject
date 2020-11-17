@@ -8,7 +8,12 @@
             Imagen: '',
             IDCategoria: null,
             Categoria: '',
-            Temas:[]
+            Temas: [],
+            Archivos: [],
+            TemaActual: {
+                selected: false,
+                data: {}
+            },
         },
         Contenido: {
             ID: null,
@@ -51,6 +56,7 @@
         }
     },
     mounted() {
+        console.clear();
         this.loadData();
         $('#ModalC').on('hidden.bs.modal', this.MChide);
     },
@@ -71,10 +77,14 @@
                             Imagen: resp.datos.Imagen,
                             IDCategoria: resp.datos.IDCategoria,
                             Categoria: resp.datos.TCategoria,
-                            Temas: resp.datos.Temas
+                            Temas: resp.datos.Temas,
+                            TemaActual: {
+                                selected: false,
+                                data: {}
+                            }
                         };
-                        console.log(Elemento.Dato);
-                        /*Elemento.Dato.Nombre = resp.datos.Name;
+                        /*console.log(Elemento.Dato);
+                        Elemento.Dato.Nombre = resp.datos.Name;
                         Elemento.Dato.Descripcion = resp.datos.Descripcion;
                         Elemento.Dato.IDCategoria = resp.datos.IDCategoria;
                         Elemento.Dato.Categoria = resp.datos.TCategoria;
@@ -99,28 +109,26 @@
                 this.Contenido.Boton.disabled = true;
                 let Elemento = this;
                 let data = {
-                    IDcurso: this.Dato.ID,
-                    Nombre: this.Contenido.Nombre.value
+                    CursoId: this.Dato.ID,
+                    Nombre: this.Contenido.Nombre.value,
+                    Descripcion: this.Contenido.Descripcion.value,
+                    Contenido: this.Contenido.Contenido.value
                 };
-                //if (this.Modal.Tipo == 2) data.CategoriaId = this.Modal.Registro.ID;
-                let ruta = (this.Modal.Tipo == 1) ? this.Rutas.CreateC : this.Rutas.EditarC;
+                if (this.Contenido.Tipo == 2) data.ContenidoCursoId = this.Contenido.ID;
+                let ruta = (this.Contenido.Tipo == 1) ? this.Rutas.CreateC : this.Rutas.EditarC;
                 await axios.post(ruta, data)
                     .then(function (resp) {
                         resp = resp.data;
                         if (resp.valido) {
-                            //Elemento.Datos = resp.datos;
-                            //$('#ModalC').modal('hide');
                             Elemento.Dato.Temas = resp.datos;
+                            let dato = Elemento.Dato.Temas.find(e => e.ID == Elemento.Contenido.ID);
+                            Elemento.selectContenido(dato);
+                            $('#ModalC').modal('hide');
                         } else {
                             switch (resp.tipo) {
                                 case -1:
                                     break;
                                 case 1:
-                                    break;
-                                case 2:
-                                    Elemento.Contenido.Nombre.invalido = true;
-                                    Elemento.Contenido.Nombre.error = 'Categoria ya existente';
-                                    Elemento.Contenido.Boton.disabled = false;
                                     break;
                             }
                         }
@@ -138,6 +146,8 @@
             if (tipo == 2) {
                 this.Contenido.ID = valor.ID;
                 this.Contenido.Nombre.value = valor.Name;
+                this.Contenido.Descripcion.value = valor.Descripcion;
+                this.Contenido.Contenido.value = valor.Contenido;
             }
         },
         MChide: function () {
@@ -175,6 +185,13 @@
                     disabled: false
                 }
             };
+        },
+        selectContenido: function (dato) {
+            this.Dato.Temas.forEach(element => {
+                element.activo = (element.ID == dato.ID) ? true : false;
+            });
+            this.Dato.TemaActual.selected = true;
+            this.Dato.TemaActual.data = dato;
         },
         //----------------- VALIDACION
         grupoValido: function (tipoModal) {

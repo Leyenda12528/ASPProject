@@ -22,10 +22,10 @@ namespace ASPProject.Controllers
 
         //  GET: Get Roles 
         [ActionName("GCursos")]
-        public ActionResult getCursos()
+        public ActionResult GetCursos()
         {
-            Usuario usuario = (Usuario)Session["login"];
             var result = new { valido = false, tipo = 0, datos = new List<GCursos1>() };
+            /*Usuario usuario = (Usuario)Session["login"];
             if (usuario != null)
             {
                 var Datos = App.Curso.ToList()
@@ -40,7 +40,7 @@ namespace ASPProject.Controllers
                            TCategoria = App.Categoria.Find(n.CategoriaId).Nombre
                        });
                 result = new { valido = true, tipo = 0, datos = Datos.ToList() };
-            } else result = new { valido = false, tipo = -1, datos = new List<GCursos1>() };
+            } else result = new { valido = false, tipo = -1, datos = new List<GCursos1>() };//*/
             //-
             var Datos2 = App.Curso.ToList()
                     .Where(n => n.UsuarioId == 1)
@@ -158,14 +158,15 @@ namespace ASPProject.Controllers
             return Json(result);
         }
         //-----------------------------------------------------------------------------
-        // GET: Cursos/Details/
+        //      CURSOS DETALLE
+        // GET: Cursos/Details/ -   VISTA
         [ActionName("DetalleMy")]
         public ActionResult Details(int id)
         {
             ViewBag.ID = id;
             return View();
         }
-        //  GET: Cursos/Detalle
+        //  GET: Cursos/Detalle -   DATOS
         [ActionName("GDetalleMy")]
         public ActionResult GDetails(int id)
         {
@@ -189,7 +190,8 @@ namespace ASPProject.Controllers
                                         ID = a.ContenidoCursoId,
                                         Name = a.Nombre,
                                         Descripcion = a.Descripcion,
-                                        Contenido = a.Contenido
+                                        Contenido = (a.Contenido != null) ? a.Contenido : "",
+                                        activo = false
                                     })
                                     .ToList(),
                        }).First();
@@ -198,12 +200,58 @@ namespace ASPProject.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        //-----------------------------------------------------------------------------
+        //      CONTENIDO DE CURSOS 
         // POST: Cursos/CreateC/
         [ActionName("CreateC")]
         [HttpPost]
-        public  ActionResult CrearContenido()
+        public  ActionResult CrearContenido([Bind(Include = "ContenidoCursoId,Nombre,Descripcion,Contenido,CursoId")] ContenidoCurso tema)
         {
-            return View();
+            Usuario usuario = (Usuario)Session["login"];
+            var result = new { valido = false, tipo = 0, datos = new List<CCurso>() };
+            if (ModelState.IsValid)
+            {
+                App.ContenidoCurso.Add(tema);
+                App.SaveChanges();
+                var Datos = App.ContenidoCurso.ToList()
+                            .Where(a => a.CursoId == tema.CursoId)
+                            .Select(a => new CCurso
+                            {
+                                ID = a.ContenidoCursoId,
+                                Name = a.Nombre,
+                                Descripcion = a.Descripcion,
+                                Contenido = (a.Contenido != null) ? a.Contenido : "",
+                                activo = false
+                            }).ToList();
+                result = new { valido = true, tipo = 0, datos = Datos };
+            } else result = new { valido = false, tipo = 1, datos = new List<CCurso>() };
+            return Json(result);
+        }
+
+        // POST: Cursos/CreateC/
+        [ActionName("EditC")]
+        [HttpPost]
+        public ActionResult EditarContenido([Bind(Include = "ContenidoCursoId,Nombre,Descripcion,Contenido,CursoId")] ContenidoCurso tema)
+        {
+            var result = new { valido = false, tipo = 0, datos = new List<CCurso>() };
+            if (ModelState.IsValid)
+            {
+                App.Entry(tema).State = EntityState.Modified;
+                App.SaveChanges();
+                var Datos = App.ContenidoCurso.ToList()
+                            .Where(a => a.CursoId == tema.CursoId)
+                            .Select(a => new CCurso
+                            {
+                                ID = a.ContenidoCursoId,
+                                Name = a.Nombre,
+                                Descripcion = a.Descripcion,
+                                Contenido = (a.Contenido != null) ? a.Contenido : "",
+                                activo = false
+                            }).ToList();
+                result = new { valido = true, tipo = 0, datos = Datos };
+            }
+            else result = new { valido = false, tipo = 1, datos = new List<CCurso>() };
+            return Json(result);
         }
     }
 }

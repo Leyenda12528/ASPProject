@@ -11,11 +11,33 @@ namespace ASPProject.Controllers
     {
         private Aplicacion App = new Aplicacion();
         // GET: Usuarios
-        [ActionName("Login")]
-        public ActionResult Index()
+        public ActionResult Login()
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult Login(string correo, string contra)
+        {
+            return Json(true);
+            /*Usuario user = App.Usuario.ToList()
+                .Where(n => n.CorreoElectronico.Equals(correo) && n.Password.Equals(contra)).FirstOrDefault();
+            if (user != null)
+            {
+                ViewBag.Message = "Usuario o contraseña Invalido";
+                return View();
+            } else {
+                Session["login"] = user;
+                if (user.RolId == 1)
+                {
+                    return RedirectToAction("Index", "Cursos");
+                } else if (user.RolId == 2)
+                {
+                    return RedirectToAction("MyCursos", "Cursos");
+                } else return RedirectToAction("Index", "Home");   
+            }//*/
+        }
+
         //  GET: Register
         [ActionName("Registrar")]
         public ActionResult Register()
@@ -60,12 +82,20 @@ namespace ASPProject.Controllers
             return Json(result);
         }
 
-        // GET: Usuarios/Edit/5
-        public ActionResult Edit(int id)
+        //-----------   MANTENIMIENTO DE USUARIOS
+        //  GET: Usuarios
+        [ActionName("Usuarios")]
+        public ActionResult SUsuarios()
         {
             return View();
         }
 
+        //  GET: Usuarios
+        [ActionName("GUsers")]
+        public ActionResult GUsuarios()
+        {
+            return View();
+        }
         // POST: Usuarios/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
@@ -73,28 +103,6 @@ namespace ASPProject.Controllers
             try
             {
                 // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Usuarios/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Usuarios/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
 
                 return RedirectToAction("Index");
             }

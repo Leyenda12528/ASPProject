@@ -3,8 +3,35 @@
     ViewBag.Title = "Login";
 }
 
-<h2>Login</h2>
+<div id="app" v-cloak>
+    <h2>Login</h2>
 
-<div class="p-5">
-    Hola
+    <div class="row">
+        <div class="col-md-12">
+            <form action="/Usuarios/Login" method="post" v-on:submit.prevent="DataValida" ref="form">
+                <div class="form-group m-0">
+                    <label class="font-weight-bold m-0">{{Registro.Correo.text}}</label>
+                    <input type="text" class="form-control rounded-pill" v-model="Registro.Correo.value"
+                           v-bind:class="{'is-invalid' : Registro.Correo.invalido}"
+                           :placeholder="Registro.Correo.placeholder" />
+                    <div class="invalid-feedback">
+                        {{Registro.Correo.error}}
+                    </div>
+                </div>
+                <div class="form-group m-0">
+                    <label class="font-weight-bold m-0">{{Registro.Contra.text}}</label>
+                    <input type="password" class="form-control rounded-pill" v-model="Registro.Contra.value"
+                           v-bind:class="{'is-invalid' : Registro.Contra.invalido}"
+                           :placeholder="Registro.Contra.placeholder" />
+                    <div class="invalid-feedback">
+                        {{Registro.Contra.error}}
+                    </div>
+                </div>
+                <div class="col-md-12 p-0">
+                    <input type="submit" :value="Boton.texto" :disabled="Boton.disabled" class="btn btn-block btn-primary2 rounded-pill font-weight-bold mt-3"/>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+@Scripts.Render("~/Scripts/v4/Usuarios/login.js")

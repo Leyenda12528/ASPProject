@@ -55,6 +55,7 @@
                 placeholder: 'Contraseña...',
                 value: '',
                 max: 30,
+                min: 3,
                 invalido: false,
                 error: '',
             },
@@ -169,7 +170,7 @@
                     break;
                 case 7:
                     this.Registro.password.error = ((data.trim().length > 0) ? '' : 'Contraseña es requerida');
-                    if (this.Registro.password.error.length == 0) this.Registro.password.error = ((data.trim().length > this.Registro.password.max) ? ('Contraseña debe tener menos de ' + this.Registro.password.max + ' caracteres') : '');
+                    if (this.Registro.password.error.length == 0) this.Registro.password.error = (((data.trim().length < this.Registro.password.min) || (data.trim().length > this.Registro.password.max)) ? ('Contraseña debe tener de ' + this.Registro.password.min + ' a ' + this.Registro.password.max + ' caracteres') : '');
                     this.Registro.password.invalido = (this.Registro.password.error.length > 0) ? true : false;
                     break;
                 case 8:

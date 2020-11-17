@@ -21,7 +21,7 @@
             </div>
             <div class="border border-white rounded-circle icono-in-btn" title="Agregar Contenido" data-toggle="modal" data-target="#ModalC" v-on:click="modalC(1)">+</div>
         </div>
-        <div class="col-md-8 d-flex justify-content-end rounded-pill btn border border-dark">
+        <div class="col-md-8 d-flex justify-content-end rounded-pill btn border border-dark bg-gris-claro">
             <div class="flex-grow-1 d-flex justify-content-center">
                 <div class="text-center"><strong>Archivos Multimedia</strong></div>
             </div>
@@ -29,8 +29,23 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4 p-0"></div>
-        <div class="col-md-8 p-0"></div>
+        <!--    TEMA    -->
+        <div class="col-md-4 p-0">
+            <div v-for="dato in Dato.Temas" class="d-flex justify-content-end rounded tema bg-light" v-bind:class="{'tema-activo': dato.activo}">
+                <div class="flex-grow-1 d-flex justify-content-center" v-on:click="selectContenido(dato)">
+                    <div class="text-center"><strong>{{dato.Name}}</strong></div>
+                </div>
+                <div class="border border-dark rounded-circle icono-in-btn" title="Editar" data-toggle="modal" data-target="#ModalC" v-on:click="modalC(2, dato)">
+                    <img src="~/Imagenes/icons/edit-black.png">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 p-0">
+            <div v-if="Dato.TemaActual.selected" class="m-1 rounded border border-dark">
+                <div><strong>Descripción: </strong>{{Dato.TemaActual.data.Descripcion}}</div>
+                <div><strong>Contenido: </strong>{{Dato.TemaActual.data.Contenido}}</div>
+            </div>
+        </div>
     </div>
     <!--    MODAL CONTENIDO   -->
     <div class="modal fade" id="ModalC" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ModalCTitle" aria-hidden="true">

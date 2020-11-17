@@ -27,8 +27,22 @@
 .icono-in-btn{
     width: 25px;
     font-weight: 700;
+    cursor: pointer;
 }
 
+.tema {
+    font-style: normal;
+}
+.tema:hover {
+    background-color: #81d4fa !important;
+}
+.tema-activo {
+    background-color: #29b6f6 !important;
+}
+/*  FONDOS */
+.bg-gris-claro {
+    background-color: #bdbdbd;
+}
 /*  H */
 .h-68{
     height: 68% !important;

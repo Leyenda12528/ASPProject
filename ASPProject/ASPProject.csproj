@@ -136,6 +136,7 @@
     <Compile Include="Controllers\CategoriasController.cs" />
     <Compile Include="Controllers\CursosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MultimediasController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -181,7 +182,10 @@
     <Content Include="Scripts\v4\Cursos\MyCursos.js" />
     <Content Include="Scripts\v4\Cursos\MyDetalle.js" />
     <Content Include="Scripts\v4\jquery-3.5.1.slim.min.js" />
+    <Content Include="Scripts\v4\Multimedia\MMedia.js" />
+    <Content Include="Scripts\v4\Usuarios\Login.js" />
     <Content Include="Scripts\v4\Usuarios\Registrar.js" />
+    <Content Include="Scripts\v4\Usuarios\Usuarios.js" />
     <Content Include="Scripts\v4\Vue.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -202,6 +206,8 @@
     <Content Include="Views\Cursos\MyCursos.cshtml" />
     <Content Include="Views\Categorias\Index.cshtml" />
     <Content Include="Views\Cursos\DetalleMy.cshtml" />
+    <Content Include="Views\Multimedias\Index.cshtml" />
+    <Content Include="Views\Usuarios\Usuarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
