@@ -45,7 +45,7 @@ namespace ASPProject.Controllers
         public ActionResult Logout()
         {
             Session["login"] = null;
-            return RedirectToAction("Login", "Usuarios");
+            return RedirectToAction("Index", "Home");
         }
 
         //  GET: Register
@@ -92,9 +92,9 @@ namespace ASPProject.Controllers
             return Json(result);
         }
 
-        //-----------   MANTENIMIENTO DE USUARIOS
+        //--------------------------------------   MANTENIMIENTO DE USUARIOS
         //  GET: Usuarios
-        [ActionName("Usuarios")]
+        [ActionName("Listar")]
         public ActionResult SUsuarios()
         {
             return View();
@@ -104,7 +104,33 @@ namespace ASPProject.Controllers
         [ActionName("GUsers")]
         public ActionResult GUsuarios()
         {
-            return View();
+            Usuario usuario = (Usuario)Session["login"];
+            if (usuario != null)
+            {
+                if (usuario.RolId == 3)
+                {
+
+                }
+                else { }
+            }
+            //*/
+            var result = new { valido = false, tipo = 0, datos = new List<UserEstructura>() };
+            List<UserEstructura> Datos = App.Usuario.ToList()
+                .Select(n =>
+                    new UserEstructura
+                    {
+                        ID = n.UsuarioId,
+                        Nombres = n.Nombres,
+                        Apellidos = n.Apellidos,
+                        Fecha = n.FechaNacimiento.ToString(),
+                        Direccion = n.Direccion,
+                        Telefono = n.Telefono,
+                        Correo = n.CorreoElectronico,
+                        IDRol = n.RolId,
+                        Rol = App.Rol.Find(n.RolId).NombreRol
+                    }).ToList();
+            result = new { valido = true, tipo = 0, datos = Datos };
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         // POST: Usuarios/Edit/5
         [HttpPost]

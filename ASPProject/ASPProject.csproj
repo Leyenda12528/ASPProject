@@ -185,7 +185,7 @@
     <Content Include="Scripts\v4\Multimedia\MMedia.js" />
     <Content Include="Scripts\v4\Usuarios\Login.js" />
     <Content Include="Scripts\v4\Usuarios\Registrar.js" />
-    <Content Include="Scripts\v4\Usuarios\Usuarios.js" />
+    <Content Include="Scripts\v4\Usuarios\Listar.js" />
     <Content Include="Scripts\v4\Vue.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -207,7 +207,7 @@
     <Content Include="Views\Categorias\Index.cshtml" />
     <Content Include="Views\Cursos\DetalleMy.cshtml" />
     <Content Include="Views\Multimedias\Index.cshtml" />
-    <Content Include="Views\Usuarios\Usuarios.cshtml" />
+    <Content Include="Views\Usuarios\Listar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

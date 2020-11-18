@@ -54,4 +54,17 @@ namespace ASPProject.Models
         public int ID { get; set; }
         public string Name { get; set; }
     }
+    //  ESTRUCTURA DE USUARIO
+    public class UserEstructura
+    {
+        public int ID { get; set; }
+        public string Nombres { get; set; }
+        public string Apellidos { get; set; }
+        public string Fecha { get; set; }
+        public string Direccion { get; set; }
+        public string Telefono { get; set; }
+        public string Correo { get; set; }
+        public int IDRol { get; set; }
+        public string Rol { get; set; }
+    }
 }
