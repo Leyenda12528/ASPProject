@@ -33,6 +33,23 @@
         <div class="navbar-collapse collapse justify-content-between">
             <ul class="navbar-nav">
                 <li>@Html.ActionLink("Acerca de", "About", "Home", null, new { @class = "nav-link" })</li>
+                @if (user != null)
+                {
+                    switch (user.RolId)
+                    {
+                        case 1:
+                            <li>@Html.ActionLink("Cursos", "Index", "Cursos", null, new { @class = "nav-link" })</li>
+                            break;
+                        case 2:
+                            <li>@Html.ActionLink("Mis Cursos", "MyCursos", "Cursos", null, new { @class = "nav-link" })</li>
+                            break;
+                        case 3:
+                            <li>@Html.ActionLink("Multimedias", "Index", "Multimedias", null, new { @class = "nav-link" })</li>
+                            <li>@Html.ActionLink("Categoria", "Index", "Categoria", null, new { @class = "nav-link" })</li>
+                            <li>@Html.ActionLink("Usuarios", "Listar", "Usuario", null, new { @class = "nav-link" })</li>
+                            break;
+                    }
+                }
             </ul>
             @if (user == null)
             {
@@ -43,27 +60,6 @@
             }
             else
             {
-                switch (user.RolId)
-                {
-                    case 1:
-                        <ul class="navbar-nav">
-                            @Html.ActionLink("Mis Cursos", "Index", "Cursos", null, new { @class = "nav-link" })
-                            @Html.ActionLink("Crear Curso", "Crear", "Cursos", null, new { @class = "nav-link" })
-                        </ul>
-                        break;
-                    case 2:
-                        <ul class="navbar-nav">
-                            @Html.ActionLink("Mis Cursos", "Index", "Cursos", null, new { @class = "nav-link" })
-                            @Html.ActionLink("Crear Curso", "Crear", "Cursos", null, new { @class = "nav-link" })
-                        </ul>
-                        break;
-                    case 3:
-                        <ul class="navbar-nav">
-                            @Html.ActionLink("Categoria", "Index", "Categoria", null, new { @class = "nav-link" })
-                            @Html.ActionLink("Usuarios", "Listar", "Usuario", null, new { @class = "nav-link" })
-                        </ul>
-                        break;
-                }
                 <ul class="navbar-nav">
                     @Html.ActionLink("Cerrar Sesión", "Logout", "Usuarios", null, new { @class = "nav-link" })
                 </ul>

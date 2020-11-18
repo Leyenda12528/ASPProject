@@ -19,23 +19,33 @@ namespace ASPProject.Controllers
         [HttpPost]
         public ActionResult Login(string correo, string contra)
         {
-            return Json(true);
-            /*Usuario user = App.Usuario.ToList()
+            //return Json(true);
+            Usuario user = App.Usuario.ToList()
                 .Where(n => n.CorreoElectronico.Equals(correo) && n.Password.Equals(contra)).FirstOrDefault();
-            if (user != null)
+            if (user == null)
             {
                 ViewBag.Message = "Usuario o contraseña Invalido";
                 return View();
             } else {
                 Session["login"] = user;
+                //  ALUMNOS
                 if (user.RolId == 1)
                 {
                     return RedirectToAction("Index", "Cursos");
-                } else if (user.RolId == 2)
+                }
+                //  DOCENTES
+                else if (user.RolId == 2)
                 {
                     return RedirectToAction("MyCursos", "Cursos");
-                } else return RedirectToAction("Index", "Home");   
+                }
+                //  ADMINISTRADOR
+                else return RedirectToAction("Index", "Home");   
             }//*/
+        }
+        public ActionResult Logout()
+        {
+            Session["login"] = null;
+            return RedirectToAction("Login", "Usuarios");
         }
 
         //  GET: Register
