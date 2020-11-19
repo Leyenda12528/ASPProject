@@ -67,4 +67,9 @@ namespace ASPProject.Models
         public int IDRol { get; set; }
         public string Rol { get; set; }
     }
+    public class RolEstructura {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Descripcion { get; set; }
+    }
 }

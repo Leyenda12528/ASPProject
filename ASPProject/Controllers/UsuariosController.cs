@@ -97,7 +97,12 @@ namespace ASPProject.Controllers
         [ActionName("Listar")]
         public ActionResult SUsuarios()
         {
-            return View();
+            Usuario usuario = (Usuario)Session["login"];
+            if (usuario != null)
+            {
+                if (usuario.RolId == 3) return View();
+                else return View();//return RedirectToAction("Index", "Home");
+            } else return RedirectToAction("Login", "Usuarios");
         }
 
         //  GET: Usuarios
@@ -122,7 +127,7 @@ namespace ASPProject.Controllers
                         ID = n.UsuarioId,
                         Nombres = n.Nombres,
                         Apellidos = n.Apellidos,
-                        Fecha = n.FechaNacimiento.ToString(),
+                        Fecha = n.FechaNacimiento.ToString("yyyy-MM-dd"),
                         Direccion = n.Direccion,
                         Telefono = n.Telefono,
                         Correo = n.CorreoElectronico,
@@ -130,6 +135,30 @@ namespace ASPProject.Controllers
                         Rol = App.Rol.Find(n.RolId).NombreRol
                     }).ToList();
             result = new { valido = true, tipo = 0, datos = Datos };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        //  GET: Get Roles 
+        [ActionName("GRoles")]
+        public ActionResult GRoles()
+        {
+            Usuario usuario = (Usuario)Session["login"];
+            var result = new { valido = false, tipo = 0, datos = new List<RolEstructura>() };
+            if (usuario != null)
+            {
+                if (usuario.RolId == 1)//if (usuario.RolId == 3)
+                {
+                    List<RolEstructura> Datos = App.Rol.ToList()
+                                .Select(n =>
+                                   new RolEstructura {
+                                       ID = n.RolId,
+                                       Name = n.NombreRol,
+                                       Descripcion = n.Descripcion
+                                   }).ToList();
+                    result = new { valido = true, tipo = 0, datos = Datos };
+                } else result = new { valido = false, tipo = 3, datos = new List<RolEstructura>() };
+            }
+            else result = new { valido = false, tipo = -1, datos = new List<RolEstructura>() };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
         // POST: Usuarios/Edit/5
