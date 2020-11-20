@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ASPProject.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,17 +13,16 @@ namespace ASPProject.Controllers
         {
             return View();
         }
+        public ActionResult Index403()
+        {
+            Usuario usuario = (Usuario)Session["login"];
+            if (usuario == null) return RedirectToAction("Login", "Usuarios");
+            else return View();
+        }
 
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
 
             return View();
         }

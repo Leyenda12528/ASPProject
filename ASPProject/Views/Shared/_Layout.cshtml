@@ -39,7 +39,6 @@
                     {
                         case 1:
                             <li>@Html.ActionLink("Cursos", "Index", "Cursos", null, new { @class = "nav-link" })</li>
-                            <li>@Html.ActionLink("Usuarios", "Listar", "Usuarios", null, new { @class = "nav-link" })</li>
                             break;
                         case 2:
                             <li>@Html.ActionLink("Mis Cursos", "MyCursos", "Cursos", null, new { @class = "nav-link" })</li>
@@ -47,7 +46,7 @@
                         case 3:
                             <li>@Html.ActionLink("Multimedias", "Index", "Multimedias", null, new { @class = "nav-link" })</li>
                             <li>@Html.ActionLink("Categoria", "Index", "Categoria", null, new { @class = "nav-link" })</li>
-
+                            <li>@Html.ActionLink("Usuarios", "Listar", "Usuarios", null, new { @class = "nav-link" })</li>
                             break;
                     }
                 }
@@ -62,6 +61,7 @@
             else
             {
                 <ul class="navbar-nav">
+                    <a class="nav-link" href="#">@user.CorreoElectronico</a>
                     @Html.ActionLink("Cerrar Sesión", "Logout", "Usuarios", null, new { @class = "nav-link" })
                 </ul>
             }

@@ -12,12 +12,22 @@ namespace ASPProject.Controllers
     public class CursosController : Controller
     {
         private Aplicacion App = new Aplicacion();
+        public ActionResult Index() {
+            Usuario usuario = (Usuario)Session["login"];
+            if (usuario == null) return RedirectToAction("Login", "Usuarios");
+            else return View();
+        }
+
         // GET: Cursos
         [ActionName("MyCursos")]
         public ActionResult MCursos()
         {
             Usuario usuario = (Usuario)Session["login"];
-            return View();
+            if (usuario == null) return RedirectToAction("Login", "Usuarios");
+            else {
+                if (usuario.RolId == 2) return View();
+                else return RedirectToAction("Index403", "Home");
+            }
         }
 
         //  GET: Get Roles 

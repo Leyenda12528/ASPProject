@@ -13,7 +13,9 @@ namespace ASPProject.Controllers
         // GET: Usuarios
         public ActionResult Login()
         {
-            return View();
+            Usuario usuario = (Usuario)Session["login"];
+            if (usuario == null) return View();
+            else return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -39,7 +41,7 @@ namespace ASPProject.Controllers
                     return RedirectToAction("MyCursos", "Cursos");
                 }
                 //  ADMINISTRADOR
-                else return RedirectToAction("Index", "Home");   
+                else return RedirectToAction("Index", "Home");
             }//*/
         }
         public ActionResult Logout()
@@ -85,7 +87,18 @@ namespace ASPProject.Controllers
                     App.Usuario.Add(usuario);
                     App.SaveChanges();
                     Session["login"] = usuario;
-                    return RedirectToAction("Index", "Home");
+                    //  ALUMNOS
+                    if (usuario.RolId == 1)
+                    {
+                        return RedirectToAction("Index", "Cursos");
+                    }
+                    //  DOCENTES
+                    else if (usuario.RolId == 2)
+                    {
+                        return RedirectToAction("MyCursos", "Cursos");
+                    }
+                    //  ADMINISTRADOR
+                    else return RedirectToAction("Index", "Home");
                     //result = new { valido = true, tipo = 0 };
                 } else result = new { valido = false, tipo = 2 };
             } else result = new { valido = false, tipo = 1 };
@@ -101,7 +114,7 @@ namespace ASPProject.Controllers
             if (usuario != null)
             {
                 if (usuario.RolId == 3) return View();
-                else return View();//return RedirectToAction("Index", "Home");
+                else return RedirectToAction("Index", "Home");
             } else return RedirectToAction("Login", "Usuarios");
         }
 
@@ -117,7 +130,7 @@ namespace ASPProject.Controllers
 
                 }
                 else { }
-            }
+            } else return RedirectToAction("Login", "Usuarios");
             //*/
             var result = new { valido = false, tipo = 0, datos = new List<UserEstructura>() };
             List<UserEstructura> Datos = App.Usuario.ToList()
