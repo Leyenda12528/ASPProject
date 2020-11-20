@@ -199,18 +199,24 @@ namespace ASPProject.Controllers
         }
         // POST: Usuarios/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit([Bind(Include = "UsuarioId,Nombres,Apellidos,FechaNacimiento,Direccion,Telefono,CorreoElectronico,Password,Estado,RolId")] Usuario usuario, String fecha)
         {
-            try
+            Usuario userSession = (Usuario)Session["login"];
+            var result = new { valido = false, tipo = 0, datos = new List<UserEstructura>() };
+            if (userSession != null)
             {
-                // TODO: Add update logic here
+                usuario.Estado = 1;
+                usuario.FechaNacimiento = DateTime.Parse(fecha);
+                if (ModelState.IsValid)
+                {
+                    Usuario dato = App.Usuario.Where(n => n.CorreoElectronico.Equals(usuario.CorreoElectronico)).FirstOrDefault();
+                    if (dato == null)
+                    {
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+                    } else result = new { valido = false, tipo = 2, datos = new List<UserEstructura>() };
+                } else result = new { valido = false, tipo = 1, datos = new List<UserEstructura>() };
+            } else result = new { valido = false, tipo = -1, datos = new List<UserEstructura>() };
+            return Json(result);
         }
     }
 }
