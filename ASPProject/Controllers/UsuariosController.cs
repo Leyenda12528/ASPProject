@@ -157,9 +157,45 @@ namespace ASPProject.Controllers
                                    }).ToList();
                     result = new { valido = true, tipo = 0, datos = Datos };
                 } else result = new { valido = false, tipo = 3, datos = new List<RolEstructura>() };
-            }
-            else result = new { valido = false, tipo = -1, datos = new List<RolEstructura>() };
+            } else result = new { valido = false, tipo = -1, datos = new List<RolEstructura>() };
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        // POST: Usuarios/Edit/5
+        [HttpPost]
+        public ActionResult AddUser([Bind(Include = "UsuarioId,Nombres,Apellidos,FechaNacimiento,Direccion,Telefono,CorreoElectronico,Password,Estado,RolId")] Usuario usuario, String fecha)
+        {
+            Usuario userSession = (Usuario)Session["login"];
+            var result = new { valido = false, tipo = 0, datos = new List<UserEstructura>() };
+            if (userSession != null)
+            {
+                usuario.Estado = 1;
+                usuario.FechaNacimiento = DateTime.Parse(fecha);
+                if (ModelState.IsValid)
+                {
+                    Usuario dato = App.Usuario.Where(n => n.CorreoElectronico.Equals(usuario.CorreoElectronico)).FirstOrDefault();
+                    if (dato == null)
+                    {
+                        App.Usuario.Add(usuario);
+                        App.SaveChanges();
+                        List<UserEstructura> Datos = App.Usuario.ToList()
+                                        .Select(n =>
+                                            new UserEstructura
+                                            {
+                                                ID = n.UsuarioId,
+                                                Nombres = n.Nombres,
+                                                Apellidos = n.Apellidos,
+                                                Fecha = n.FechaNacimiento.ToString("yyyy-MM-dd"),
+                                                Direccion = n.Direccion,
+                                                Telefono = n.Telefono,
+                                                Correo = n.CorreoElectronico,
+                                                IDRol = n.RolId,
+                                                Rol = App.Rol.Find(n.RolId).NombreRol
+                                            }).ToList();
+                        result = new { valido = true, tipo = 0, datos = Datos };
+                    } else result = new { valido = false, tipo = 2, datos = new List<UserEstructura>() };
+                } else result = new { valido = false, tipo = 1, datos = new List<UserEstructura>() };
+            } else result = new { valido = false, tipo = -1, datos = new List<UserEstructura>() };
+            return Json(result);
         }
         // POST: Usuarios/Edit/5
         [HttpPost]

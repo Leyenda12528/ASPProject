@@ -83,8 +83,8 @@
         Rutas: {
             loadUsers: '/Usuarios/GUsers',
             loadRoles: '/Usuarios/GRoles',
-            add: '/Usurios/Create',
-            edit: '/Usuarios/Edit'
+            add: '/Usuarios/AddUser',
+            edit: '/Usuarios/EditUser'
         }
     },
     mounted() {
@@ -221,7 +221,7 @@
             this.User.Tipo = tipo;
             this.User.Titulo = (tipo == 1) ? 'Añadir Usuario' : 'Modificar Usuario';
             this.User.Boton.texto = (tipo == 1) ? 'Agregar' : 'Modificar';
-            if (tipo == 2) 0{
+            if (tipo == 2) {
                 this.User.Registro.ID = valor.ID;
                 this.User.Registro.Nombre.value = valor.Nombres;
                 this.User.Registro.Apellido.value = valor.Apellidos;
@@ -232,9 +232,43 @@
                 this.User.Registro.Rol.value = valor.IDRol;
             }
         },
-        agregar: function () {
+        agregar: async function () {
             if (this.grupoValido()) {
-
+                let Elemento = this;
+                let data = {
+                    Nombres: this.User.Registro.Nombre.value,
+                    Apellidos: this.User.Registro.Apellido.value,
+                    fecha: this.User.Registro.Fecha.value,
+                    Direccion: this.User.Registro.Direccion.value,
+                    Telefono: this.User.Registro.Telefono.value,
+                    CorreoElectronico: this.User.Registro.Correo.value,
+                    Password: this.User.Registro.Password.value,
+                    RolId: this.User.Registro.Rol.value
+                };
+                if (this.User.Tipo == 2) data.UsuarioId = this.User.Registro.ID;
+                let ruta = (this.User.Tipo == 1) ? this.Rutas.add : this.Rutas.edit;
+                await axios.post(ruta, data)
+                    .then(function (resp) {
+                        resp = resp.data;
+                        if (resp.valido) {
+                            Elemento.Datos = resp.datos;
+                            $('#ModalC').modal('hide');
+                        } else { 
+                            switch (resp.tipo) {
+                                case -1:
+                                    break;
+                                case 1:
+                                    break;
+                                case 2:
+                                    Elemento.User.Registro.Correo.invalido = true;
+                                    Elemento.User.Registro.Correo.error = 'Correo ya existente';
+                                    break;
+                            }
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
             }
         },
         grupoValido: function () {
@@ -300,7 +334,7 @@
     },
     watch: {
         'User.Registro.Rol.value': function (data) {
-            this.User.Registro.Rol.descripcion = this.User.Registro.Rol.data.find(e => e.ID == data).Descripcion;
+            if (this.User.Tipo == 1) this.User.Registro.Rol.descripcion = this.User.Registro.Rol.data.find(e => e.ID == data).Descripcion;
             //this.validacion(8, data);
         }
     }
