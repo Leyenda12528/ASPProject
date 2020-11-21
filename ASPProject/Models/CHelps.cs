@@ -29,7 +29,7 @@ namespace ASPProject.Models
         public string Extension { get; set; }
         public int Size { get; set; }
     }
-    //  ESTRUCTURA DE CURSO CON SUS TEMAS PARA EL AUTOR
+    //  ESTRUCTURA DE TEMA
     public class CCurso
     {
         public int ID { get; set; }
@@ -38,6 +38,7 @@ namespace ASPProject.Models
         public string Contenido { get; set; }
         public bool activo { get; set; }
     }
+    //  ESTRUCTURA DE CURSO CON SUS TEMAS
     public class GCursoD1
     {
         public int ID { get; set; }
@@ -47,6 +48,15 @@ namespace ASPProject.Models
         public int IDCategoria { get; set; }
         public string TCategoria { get; set; }
         public List<CCurso> Temas { get; set; }
+    }
+    //  ESTRUCTURA  DE CONTENIDO MULTIMEDIA
+    public class MyNultiEstructura
+    {
+        public int ID { get; set; }
+        public string Nombre { get; set; }
+        public int IDContenido { get; set; }
+        public int IDMulti { get; set; }
+        public string Multimedia { get; set; }
     }
     //  ESTRUCTURA SIMPLE DE ID Y NOMBRE
     public class Simple

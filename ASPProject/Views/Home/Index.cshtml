@@ -1,9 +1,14 @@
-﻿@{
+﻿@using ASPProject.Models;
+@{
     ViewBag.Title = "Platform";
+    Usuario user = (Usuario)Session["login"];
 }
 
-<div class="jumbotron mt-5">
+<div class="jumbotron mt-5 border border-primary">
     <h1>Platform</h1>
     <p class="lead">Un sitio donde podras encontrar multiples cursos para aprender, disfrutalo.</p>
-    <p><a href="@Url.Action("Login", "Usuarios")" class="btn btn-primary btn-lg">Iniciar Sesión »</a></p>
+    @if (user == null)
+    {
+        <p><a href="@Url.Action("Login", "Usuarios")" class="btn btn-primary btn-lg">Iniciar Sesión »</a></p>
+    }
 </div>

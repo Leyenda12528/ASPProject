@@ -104,8 +104,7 @@
                         switch (resp.tipo) {
                             // no inicio sesion
                             case -1:
-                                break;
-                            case 1:
+                                window.open('/Usuarios/Login', '_self');
                                 break;
                         }
                     }
@@ -119,19 +118,8 @@
             await axios.get(this.Rutas.loadRoles)
                 .then(function (resp) {
                     resp = resp.data;
-                    if (resp.valido) {
-                        Elemento.User.Registro.Rol.data = resp.datos;
-                        Elemento.User.Registro.Rol.value = resp.datos[0].ID;
-                    } else {
-                        switch (tipo) {
-                            // no inicio sesion
-                            case -1:
-                            break;
-                            // sin permiso
-                            case 3:
-                            break;
-                        }
-                    }
+                    Elemento.User.Registro.Rol.data = resp.datos;
+                    Elemento.User.Registro.Rol.value = resp.datos[0].ID;
                 })
                 .catch(function (error) {
                     console.log(error)
@@ -253,10 +241,8 @@
                         if (resp.valido) {
                             Elemento.Datos = resp.datos;
                             $('#ModalC').modal('hide');
-                        } else { 
+                        } else {
                             switch (resp.tipo) {
-                                case -1:
-                                    break;
                                 case 1:
                                     break;
                                 case 2:

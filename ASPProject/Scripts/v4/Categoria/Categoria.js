@@ -36,7 +36,16 @@
             await axios.get('/Categorias/GCategorias')
                 .then(function (resp) {
                     resp = resp.data;
-                    Elemento.Datos = resp.datos;
+                    if (resp.valido) {
+                        Elemento.Datos = resp.datos;
+                    } else {
+                        switch (resp.tipo) {
+                            // no inicio sesion
+                            case -1:
+                                window.open('/Usuarios/Login', '_self');
+                                break;
+                        }
+                    }
                 })
                 .catch(function (error) {
                     console.log(error)
@@ -85,8 +94,6 @@
                             $('#ModalC').modal('hide');
                         } else {
                             switch (resp.tipo) {
-                                case -1:
-                                    break;
                                 case 1:
                                     break;
                                 case 2:

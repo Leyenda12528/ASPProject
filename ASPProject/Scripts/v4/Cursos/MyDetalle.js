@@ -49,10 +49,48 @@
                 disabled: false
             }
         },
+        Multi: {
+            ID: null,
+            Tipo: 0,
+            Nombre: {
+                Nombre: '',
+                max: 200,
+                text: 'Nombre Multimedia',
+                placeholder: 'Nombre',
+                invalido: false,
+                value: '',
+                error: ''
+            },
+            Multimedia: {
+                data: [],
+                text: 'Tipo de Multimedia',
+                placeholder: 'Seleccionar...',
+                descripcion: '',
+                value: '',
+                invalido: false,
+                error: ''
+            },
+            Archivo: {
+                text1: 'Arrastrar y Soltar',
+                text2: 'Presionar para Examinar...',
+                ext: '.png, .jpg, .jpeg',
+                filehover: false,
+                src: null,
+                max: 900,
+                valor: null,
+                error: true,
+                nombre: '',
+            },
+            Boton: {
+                texto: '',
+                disabled: false
+            }
+        },
         Rutas: {
             GDetalle: '/Cursos/GDetalleMy',
             CreateC: '/Cursos/CreateC',
             EditarC: '/Cursos/EditC',
+            GMultimediaMy: '/Cursos/GMultimediaMy'
         }
     },
     mounted() {
@@ -104,6 +142,20 @@
                     console.log(error)
                 });
         },
+        loadMultimedia: async function () {
+            let Elemento = this;
+            await axios.get(this.Rutas.GMultimediaMy, {
+                params: {
+                    id: this.Dato.TemaActual.data.ID
+                }
+            }).then(function (resp) {
+                    resp = resp.data;
+                    //Elemento.Modal.dato.categoria.data = resp.datos;
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
+        },
         agregarContenido: async function () {
             if (this.grupoValido(1)) {
                 this.Contenido.Boton.disabled = true;
@@ -121,13 +173,17 @@
                         resp = resp.data;
                         if (resp.valido) {
                             Elemento.Dato.Temas = resp.datos;
-                            let dato = Elemento.Dato.Temas.find(e => e.ID == Elemento.Contenido.ID);
-                            Elemento.selectContenido(dato);
+                            let dato = null;
+                            if (Elemento.Contenido.Tipo == 2) {
+                                dato = Elemento.Dato.Temas.find(e => e.ID == Elemento.Contenido.ID);
+                            }
+                            else {
+                                dato = Elemento.Dato.Temas.find(e => e.ID == Elemento.Dato.Temas[Elemento.Dato.Temas.length - 1].ID);
+                            }
+                            if (dato != undefined && dato != null) Elemento.selectContenido(dato);
                             $('#ModalC').modal('hide');
                         } else {
                             switch (resp.tipo) {
-                                case -1:
-                                    break;
                                 case 1:
                                     break;
                             }
@@ -149,6 +205,9 @@
                 this.Contenido.Descripcion.value = valor.Descripcion;
                 this.Contenido.Contenido.value = valor.Contenido;
             }
+        },
+        modalMulti: function (tipo, valor = null) {
+
         },
         MChide: function () {
             this.Contenido = {
@@ -192,6 +251,7 @@
             });
             this.Dato.TemaActual.selected = true;
             this.Dato.TemaActual.data = dato;
+            this.loadMultimedia();
         },
         //----------------- VALIDACION
         grupoValido: function (tipoModal) {

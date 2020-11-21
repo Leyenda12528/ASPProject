@@ -14,7 +14,12 @@ namespace ASPProject.Controllers
         // GET: Multimedias
         public ActionResult Index()
         {
-            return View();
+            Usuario usuario = (Usuario)Session["login"];
+            if (usuario != null)
+            {
+                if (usuario.RolId == 3) return View();
+                else return RedirectToAction("Index403", "Home");
+            } else return RedirectToAction("Login", "Usuarios");
         }
 
         [ActionName("Medias")]
@@ -22,16 +27,19 @@ namespace ASPProject.Controllers
         {
             Usuario usuario = (Usuario)Session["login"];
             var result = new { valido = false, tipo = 0, datos = new List<GMultiM>() };
-            var Datos = App.Multimedia.ToList()
-                    .Select(n =>
-                       new GMultiM
-                       {
-                           ID = n.MultimediaId,
-                           Name = n.Nombre,
-                           Extension = n.Extension,
-                           Size = n.TamanioMaximo
-                       }).ToList();
-            result = new { valido = true, tipo = 0, datos = Datos };
+            if (usuario != null)
+            {
+                var Datos = App.Multimedia.ToList()
+                        .Select(n =>
+                           new GMultiM
+                           {
+                               ID = n.MultimediaId,
+                               Name = n.Nombre,
+                               Extension = n.Extension,
+                               Size = n.TamanioMaximo
+                           }).ToList();
+                result = new { valido = true, tipo = 0, datos = Datos };
+            } else result = new { valido = false, tipo = -1, datos = new List<GMultiM>() };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

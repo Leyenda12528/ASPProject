@@ -15,22 +15,30 @@ namespace ASPProject.Controllers
         public ActionResult Index()
         {
             Usuario usuario = (Usuario)Session["login"];
-            return View();
+            if (usuario != null)
+            {
+                if (usuario.RolId == 3) return View();
+                else return RedirectToAction("Index403", "Home");
+            } else return RedirectToAction("Login", "Usuarios");
         }
 
+        //  GET CATEGORIAS
         [ActionName("GCategorias")]
         public ActionResult GetCategorias()
         {
             Usuario usuario = (Usuario)Session["login"];
             var result = new { valido = false, tipo = 0, datos = new List<Simple>() };
-            var Datos = App.Categoria.ToList()
-                    .Select(n =>
-                       new Simple
-                       {
-                           ID = n.CategoriaId,
-                           Name = n.Nombre
-                       });
-            result = new { valido = true, tipo = 0, datos = Datos.ToList() };
+            if (usuario != null)
+            {
+                var Datos = App.Categoria.ToList()
+                        .Select(n =>
+                           new Simple
+                           {
+                               ID = n.CategoriaId,
+                               Name = n.Nombre
+                           });
+                result = new { valido = true, tipo = 0, datos = Datos.ToList() };
+            } else result = new { valido = false, tipo = -1, datos = new List<Simple>() };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -83,10 +91,8 @@ namespace ASPProject.Controllers
                                Name = n.Nombre
                            });
                     result = new { valido = true, tipo = 0, datos = Datos.ToList() };
-                }
-                else result = new { valido = false, tipo = 2, datos = new List<Simple>() };
-            }
-            else result = new { valido = false, tipo = 1, datos = new List<Simple>() };
+                } else result = new { valido = false, tipo = 2, datos = new List<Simple>() };
+            } else result = new { valido = false, tipo = 1, datos = new List<Simple>() };
             return Json(result);
         }
         

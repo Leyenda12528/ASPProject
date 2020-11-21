@@ -25,7 +25,7 @@
             <div class="flex-grow-1 d-flex justify-content-center">
                 <div class="text-center"><strong>Archivos Multimedia</strong></div>
             </div>
-            <div class="border border-dark rounded-circle icono-in-btn" title="Agregar Multimedia">+</div>
+            <div class="border border-dark rounded-circle icono-in-btn" title="Agregar Multimedia" v-on:click="modalMulti(1)">+</div>
         </div>
     </div>
     <div class="row">
@@ -40,10 +40,13 @@
                 </div>
             </div>
         </div>
+        <!--    MULTIMEDIAS    -->
         <div class="col-md-8 p-0">
-            <div v-if="Dato.TemaActual.selected" class="m-1 rounded border border-dark">
-                <div><strong>Descripción: </strong>{{Dato.TemaActual.data.Descripcion}}</div>
-                <div><strong>Contenido: </strong>{{Dato.TemaActual.data.Contenido}}</div>
+            <div v-if="Dato.TemaActual.selected">
+                <div class="m-1 rounded border border-dark">
+                    <div><strong>Descripción: </strong>{{Dato.TemaActual.data.Descripcion}}</div>
+                    <div><strong>Contenido: </strong>{{Dato.TemaActual.data.Contenido}}</div>
+                </div>
             </div>
         </div>
     </div>

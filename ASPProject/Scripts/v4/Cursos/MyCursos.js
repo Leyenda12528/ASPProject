@@ -69,8 +69,6 @@
                     resp = resp.data;
                     if (resp.valido) {
                         Elemento.Datos = resp.datos;
-                    } else {
-                        if (resp.tipo == -1) {}
                     }
                 })
                 .catch(function (error) {
@@ -169,8 +167,6 @@
                             $('#ModalC').modal('hide');
                         } else {
                             switch (resp.tipo) {
-                                case -1:
-                                    break;
                                 case 1:
                                     break;
                                 case 2:

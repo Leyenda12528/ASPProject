@@ -1,6 +1,7 @@
 ﻿using ASPProject.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -47,14 +48,21 @@ namespace ASPProject.Controllers
         public ActionResult Logout()
         {
             Session["login"] = null;
+            Session.Remove("login");
+            Session.Clear();
+            Session.Abandon();
             return RedirectToAction("Index", "Home");
         }
 
+        //----------------------------------------------------------------
+        //--------------------------------------------- REGISTRAR
         //  GET: Register
         [ActionName("Registrar")]
         public ActionResult Register()
         {
-            return View();
+            Usuario usuario = (Usuario)Session["login"];
+            if (usuario == null) return View();
+            else return RedirectToAction("Index", "Home");
         }
         //  GET: Get Roles 
         [ActionName("Roles")]
@@ -114,7 +122,7 @@ namespace ASPProject.Controllers
             if (usuario != null)
             {
                 if (usuario.RolId == 3) return View();
-                else return RedirectToAction("Index", "Home");
+                else return RedirectToAction("Index403", "Home");
             } else return RedirectToAction("Login", "Usuarios");
         }
 
@@ -123,31 +131,25 @@ namespace ASPProject.Controllers
         public ActionResult GUsuarios()
         {
             Usuario usuario = (Usuario)Session["login"];
+            var result = new { valido = false, tipo = 0, datos = new List<UserEstructura>() };
             if (usuario != null)
             {
-                if (usuario.RolId == 3)
-                {
-
-                }
-                else { }
-            } else return RedirectToAction("Login", "Usuarios");
-            //*/
-            var result = new { valido = false, tipo = 0, datos = new List<UserEstructura>() };
-            List<UserEstructura> Datos = App.Usuario.ToList()
-                .Select(n =>
-                    new UserEstructura
-                    {
-                        ID = n.UsuarioId,
-                        Nombres = n.Nombres,
-                        Apellidos = n.Apellidos,
-                        Fecha = n.FechaNacimiento.ToString("yyyy-MM-dd"),
-                        Direccion = n.Direccion,
-                        Telefono = n.Telefono,
-                        Correo = n.CorreoElectronico,
-                        IDRol = n.RolId,
-                        Rol = App.Rol.Find(n.RolId).NombreRol
-                    }).ToList();
-            result = new { valido = true, tipo = 0, datos = Datos };
+                List<UserEstructura> Datos = App.Usuario.ToList()
+                    .Select(n =>
+                        new UserEstructura
+                        {
+                            ID = n.UsuarioId,
+                            Nombres = n.Nombres,
+                            Apellidos = n.Apellidos,
+                            Fecha = n.FechaNacimiento.ToString("yyyy-MM-dd"),
+                            Direccion = n.Direccion,
+                            Telefono = n.Telefono,
+                            Correo = n.CorreoElectronico,
+                            IDRol = n.RolId,
+                            Rol = App.Rol.Find(n.RolId).NombreRol
+                        }).ToList();
+                result = new { valido = true, tipo = 0, datos = Datos };    
+            } else result = new { valido = false, tipo = -1, datos = new List<UserEstructura>() };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -157,20 +159,15 @@ namespace ASPProject.Controllers
         {
             Usuario usuario = (Usuario)Session["login"];
             var result = new { valido = false, tipo = 0, datos = new List<RolEstructura>() };
-            if (usuario != null)
-            {
-                if (usuario.RolId == 1)//if (usuario.RolId == 3)
-                {
-                    List<RolEstructura> Datos = App.Rol.ToList()
+            List<RolEstructura> Datos = App.Rol.ToList()
                                 .Select(n =>
-                                   new RolEstructura {
+                                   new RolEstructura
+                                   {
                                        ID = n.RolId,
                                        Name = n.NombreRol,
                                        Descripcion = n.Descripcion
                                    }).ToList();
-                    result = new { valido = true, tipo = 0, datos = Datos };
-                } else result = new { valido = false, tipo = 3, datos = new List<RolEstructura>() };
-            } else result = new { valido = false, tipo = -1, datos = new List<RolEstructura>() };
+            result = new { valido = true, tipo = 0, datos = Datos };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
         // POST: Usuarios/Edit/5
@@ -179,56 +176,71 @@ namespace ASPProject.Controllers
         {
             Usuario userSession = (Usuario)Session["login"];
             var result = new { valido = false, tipo = 0, datos = new List<UserEstructura>() };
-            if (userSession != null)
+            usuario.Estado = 1;
+            usuario.FechaNacimiento = DateTime.Parse(fecha);
+            if (ModelState.IsValid)
             {
-                usuario.Estado = 1;
-                usuario.FechaNacimiento = DateTime.Parse(fecha);
-                if (ModelState.IsValid)
+                Usuario dato = App.Usuario.Where(n => n.CorreoElectronico.Equals(usuario.CorreoElectronico)).FirstOrDefault();
+                if (dato == null)
                 {
-                    Usuario dato = App.Usuario.Where(n => n.CorreoElectronico.Equals(usuario.CorreoElectronico)).FirstOrDefault();
-                    if (dato == null)
-                    {
-                        App.Usuario.Add(usuario);
-                        App.SaveChanges();
-                        List<UserEstructura> Datos = App.Usuario.ToList()
-                                        .Select(n =>
-                                            new UserEstructura
-                                            {
-                                                ID = n.UsuarioId,
-                                                Nombres = n.Nombres,
-                                                Apellidos = n.Apellidos,
-                                                Fecha = n.FechaNacimiento.ToString("yyyy-MM-dd"),
-                                                Direccion = n.Direccion,
-                                                Telefono = n.Telefono,
-                                                Correo = n.CorreoElectronico,
-                                                IDRol = n.RolId,
-                                                Rol = App.Rol.Find(n.RolId).NombreRol
-                                            }).ToList();
-                        result = new { valido = true, tipo = 0, datos = Datos };
-                    } else result = new { valido = false, tipo = 2, datos = new List<UserEstructura>() };
-                } else result = new { valido = false, tipo = 1, datos = new List<UserEstructura>() };
-            } else result = new { valido = false, tipo = -1, datos = new List<UserEstructura>() };
+                    App.Usuario.Add(usuario);
+                    App.SaveChanges();
+                    List<UserEstructura> Datos = App.Usuario.ToList()
+                                    .Select(n =>
+                                        new UserEstructura
+                                        {
+                                            ID = n.UsuarioId,
+                                            Nombres = n.Nombres,
+                                            Apellidos = n.Apellidos,
+                                            Fecha = n.FechaNacimiento.ToString("yyyy-MM-dd"),
+                                            Direccion = n.Direccion,
+                                            Telefono = n.Telefono,
+                                            Correo = n.CorreoElectronico,
+                                            IDRol = n.RolId,
+                                            Rol = App.Rol.Find(n.RolId).NombreRol
+                                        }).ToList();
+                    result = new { valido = true, tipo = 0, datos = Datos };
+                } else result = new { valido = false, tipo = 2, datos = new List<UserEstructura>() };
+            } else result = new { valido = false, tipo = 1, datos = new List<UserEstructura>() };
             return Json(result);
         }
         // POST: Usuarios/Edit/5
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "UsuarioId,Nombres,Apellidos,FechaNacimiento,Direccion,Telefono,CorreoElectronico,Password,Estado,RolId")] Usuario usuario, String fecha)
+        public ActionResult EditUser ([Bind(Include = "UsuarioId,Nombres,Apellidos,FechaNacimiento,Direccion,Telefono,CorreoElectronico,Password,Estado,RolId")] Usuario usuario, String fecha)
         {
             Usuario userSession = (Usuario)Session["login"];
             var result = new { valido = false, tipo = 0, datos = new List<UserEstructura>() };
-            if (userSession != null)
+            usuario.Estado = 1;
+            usuario.FechaNacimiento = DateTime.Parse(fecha);
+            if (ModelState.IsValid)
             {
-                usuario.Estado = 1;
-                usuario.FechaNacimiento = DateTime.Parse(fecha);
-                if (ModelState.IsValid)
+                Usuario dato = App.Usuario.Where(n => n.CorreoElectronico.Equals(usuario.CorreoElectronico) && n.UsuarioId != usuario.UsuarioId).FirstOrDefault();
+                if (dato == null)
                 {
-                    Usuario dato = App.Usuario.Where(n => n.CorreoElectronico.Equals(usuario.CorreoElectronico)).FirstOrDefault();
-                    if (dato == null)
+                    if (usuario.Password.Equals("valor"))
                     {
-
-                    } else result = new { valido = false, tipo = 2, datos = new List<UserEstructura>() };
-                } else result = new { valido = false, tipo = 1, datos = new List<UserEstructura>() };
-            } else result = new { valido = false, tipo = -1, datos = new List<UserEstructura>() };
+                        Usuario userOld = App.Usuario.AsNoTracking().Where(c => c.UsuarioId == usuario.UsuarioId).FirstOrDefault();
+                        usuario.Password = userOld.Password;
+                    }
+                    App.Entry(usuario).State = EntityState.Modified;
+                    App.SaveChanges();
+                    List<UserEstructura> Datos = App.Usuario.ToList()
+                                    .Select(n =>
+                                        new UserEstructura
+                                        {
+                                            ID = n.UsuarioId,
+                                            Nombres = n.Nombres,
+                                            Apellidos = n.Apellidos,
+                                            Fecha = n.FechaNacimiento.ToString("yyyy-MM-dd"),
+                                            Direccion = n.Direccion,
+                                            Telefono = n.Telefono,
+                                            Correo = n.CorreoElectronico,
+                                            IDRol = n.RolId,
+                                            Rol = App.Rol.Find(n.RolId).NombreRol
+                                        }).ToList();
+                    result = new { valido = true, tipo = 0, datos = Datos };
+                } else result = new { valido = false, tipo = 2, datos = new List<UserEstructura>() };
+            } else result = new { valido = false, tipo = 1, datos = new List<UserEstructura>() };
             return Json(result);
         }
     }
