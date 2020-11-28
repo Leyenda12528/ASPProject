@@ -96,7 +96,7 @@ namespace ASPProject.Controllers
                     App.SaveChanges();
                     Session["login"] = usuario;
                     //  ALUMNOS
-                    if (usuario.RolId == 1)
+                    /*if (usuario.RolId == 1)
                     {
                         return RedirectToAction("Index", "Cursos");
                     }
@@ -106,8 +106,8 @@ namespace ASPProject.Controllers
                         return RedirectToAction("MyCursos", "Cursos");
                     }
                     //  ADMINISTRADOR
-                    else return RedirectToAction("Index", "Home");
-                    //result = new { valido = true, tipo = 0 };
+                    else return RedirectToAction("Index", "Home");//*/
+                    result = new { valido = true, tipo = 0 };
                 } else result = new { valido = false, tipo = 2 };
             } else result = new { valido = false, tipo = 1 };
             return Json(result);

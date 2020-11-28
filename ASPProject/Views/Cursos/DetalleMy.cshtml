@@ -47,6 +47,22 @@
                     <div><strong>Descripción: </strong>{{Dato.TemaActual.data.Descripcion}}</div>
                     <div><strong>Contenido: </strong>{{Dato.TemaActual.data.Contenido}}</div>
                 </div>
+                <div>
+                    <div v-for="archivo in Dato.TemaActual.Archivos">
+                        <div class="m-1 d-flex bd-highlight rounded multimedia">
+                            <div v-if="archivo.IDMulti == 1" class="p-2 bd-highlight">
+                                <img src="~/Imagenes/icons/pdf.png" height="30" width="30">
+                            </div>
+                            <div v-else class="p-2 bd-highlight">
+                                <img :src="archivo.Ruta" height="30" width="30">
+                            </div>
+                            <div class="p-2 flex-grow-1 bd-highlight"><a :href="archivo.Ruta" target="_blank">{{archivo.Nombre}}</a></div>
+                            <div class="p-2 bd-highlight close rounded border border-dark btn-del" v-on:click="byeMulti(archivo)">
+                                <span aria-hidden="true">×</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -99,6 +115,55 @@
         </div>
     </div>
     <!--    MODAL MULTIMEDIA  -->
+    <div class="modal fade" id="ModalMulti" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ModalMultiTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white">{{Multi.Titulo}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group m-0">
+                        <label class="font-weight-bold">{{Multi.Nombre.text}}</label>
+                        <input type="text" class="form-control rounded-pill" v-model="Multi.Nombre.value"
+                               v-bind:class="{'is-invalid' : Multi.Nombre.invalido}"
+                               :placeholder="Multi.Nombre.placeholder" />
+                        <div class="invalid-feedback">
+                            {{Multi.Nombre.error}}
+                        </div>
+                    </div>
+
+                    <div class="form-group m-0">
+                        <label class="font-weight-bold">{{Multi.Multimedia.text}}</label>
+                        <select class="form-control rounded-pill" v-model="Multi.Multimedia.value"
+                                v-bind:class="{'is-invalid' : Multi.Multimedia.invalido}">
+                            <option disabled value="">{{Multi.Multimedia.placeholder}}</option>
+                            <option v-for="opcion in Multi.Multimedia.data" v-bind:value="opcion.ID">{{opcion.Name}}</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            {{Multi.Multimedia.error}}
+                        </div>
+                    </div>
+
+                    <div class="form-group m-0">
+                        <label class="font-weight-bold m-0">{{Multi.Archivo.text}}</label>
+                        <input type="file" v-on:change="previewFiles" class="form-control rounded-pill" ref="inputFile"/>
+                        <div class="invalid-feedback" style="display:inherit">
+                            {{Multi.Archivo.error}}
+                        </div>
+                    </div>
+                    <div class="col-md-12 p-0">
+                        <button type="button" class="btn btn-block btn-primary2 rounded-pill font-weight-bold mt-3" v-on:click="agregarMultimedia"
+                                :disabled="Multi.Boton.disabled">
+                            {{Multi.Boton.texto}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!---->
 </div>
 <script>const valID = @ViewBag.ID</script>

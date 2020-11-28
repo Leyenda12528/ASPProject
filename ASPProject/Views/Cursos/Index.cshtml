@@ -4,6 +4,19 @@
 }
 
 <div id="app">
-    <h2>Cursos Disponibles</h2>
+
+    <div class="row">
+        <div class="col-md-3 p-0 px-2 curso mt-2" v-for="dato in Datos" v-on:click="verDetalle(dato)">
+            <img :src="dato.Imagen" width="100%" height="120">
+            <h4 class="m-0">{{dato.Name}}</h4>
+            <p class="m-0 fs-15">
+                {{dato.Descripcion}}
+            </p>
+            <p class="categoria-curso m-0 fs-13">{{dato.TCategoria}}</p>
+        </div>
+    </div>
+
 </div>
+
+@Scripts.Render("~/Scripts/v4/Cursos/Index.js")
 

@@ -179,6 +179,8 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\v4\axios.min.js" />
     <Content Include="Scripts\v4\Categoria\Categoria.js" />
+    <Content Include="Scripts\v4\Cursos\Detalle.js" />
+    <Content Include="Scripts\v4\Cursos\Index.js" />
     <Content Include="Scripts\v4\Cursos\MyCursos.js" />
     <Content Include="Scripts\v4\Cursos\MyDetalle.js" />
     <Content Include="Scripts\v4\jquery-3.5.1.slim.min.js" />
@@ -210,6 +212,7 @@
     <Content Include="Views\Usuarios\Listar.cshtml" />
     <Content Include="Views\Cursos\Index.cshtml" />
     <Content Include="Views\Home\Index403.cshtml" />
+    <Content Include="Views\Cursos\Detalle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

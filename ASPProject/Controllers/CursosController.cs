@@ -17,6 +17,82 @@ namespace ASPProject.Controllers
             if (usuario == null) return RedirectToAction("Login", "Usuarios");
             else return View();
         }
+        public ActionResult Detalle(int ? id)
+        {
+            Usuario usuario = (Usuario)Session["login"];
+            if (usuario == null) return RedirectToAction("Login", "Usuarios");
+            else
+            {
+                if (id == null) return RedirectToAction("Cursos");
+                else
+                {
+                    ViewBag.ID = id;
+                    return View();
+                }
+            }
+        }
+        public ActionResult GCursosAll()
+        {
+            var result = new { valido = false, tipo = 0, datos = new List<GCursos1>() };
+            Usuario usuario = (Usuario)Session["login"];
+            var Datos2 = App.Curso.ToList()
+                    .Select(n =>
+                       new GCursos1
+                       {
+                           ID = n.CursoId,
+                           Name = n.Titulo,
+                           Descripcion = n.Descripcion,
+                           Imagen = (n.Imagen != null) ? n.Imagen : "/Imagenes/sinFoto.png",
+                           IDCategoria = n.CategoriaId,
+                           TCategoria = App.Categoria.Find(n.CategoriaId).Nombre
+                       });
+            result = new { valido = true, tipo = 0, datos = Datos2.ToList() };
+            //-
+            return Json(result, JsonRequestBehavior.AllowGet);//*/
+        }
+        public ActionResult GDetalleAll(int id)
+        {
+            Usuario usuario = (Usuario)Session["login"];
+            var result = new { valido = false, tipo = 0, datos = new GCursoD1() };
+            //  GET DATOS GENERALES DE CURSO
+            var Dato = App.Curso.ToList()
+                    .Where(n => n.CursoId == id)
+                    .Select(n =>
+                       new GCursoD1
+                       {
+                           ID = n.CursoId,
+                           Name = n.Titulo,
+                           Descripcion = n.Descripcion,
+                           Imagen = (n.Imagen != null) ? n.Imagen : "/Imagenes/sinFoto.png",
+                           IDCategoria = n.CategoriaId,
+                           TCategoria = App.Categoria.Find(n.CategoriaId).Nombre,
+                           Temas = App.ContenidoCurso.ToList()
+                                    .Where(a => a.CursoId == id)
+                                    .Select(a => new CCurso
+                                    {
+                                        ID = a.ContenidoCursoId,
+                                        Name = a.Nombre,
+                                        Descripcion = a.Descripcion,
+                                        Contenido = (a.Contenido != null) ? a.Contenido : "",
+                                        activo = false,
+                                        Archivos = App.ContenidoCursoMultimedia.ToList()
+                                            .Where(b => b.ContenidoCursoId == a.ContenidoCursoId)
+                                            .Select(b => new MyNultiEstructura
+                                            {
+                                                ID = b.ContenidoCursoMultimediaId,
+                                                Nombre = b.Nombre,
+                                                IDContenido = b.ContenidoCursoId,
+                                                IDMulti = b.MultimediaId,
+                                                Multimedia = App.Multimedia.Find(b.MultimediaId).Nombre,
+                                                Ruta = b.Archivo
+                                            }).ToList()
+                                    })
+                                    .ToList(),
+                       }).First();
+            //  GET CONTENIDO DE CURSO
+            result = new { valido = true, tipo = 0, datos = Dato };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
         //---------------------------------------------------------------------------------------------------------
         //---------------------------------------------------MANTENIMIENTO DE CURSOS
@@ -161,10 +237,10 @@ namespace ASPProject.Controllers
         // --------------------------------------------------     CURSOS DETALLE
         // GET: Cursos/Details/ -   VISTA
         [ActionName("DetalleMy")]
-        public ActionResult Details(int id)
+        public ActionResult Details(int ? id)
         {
             Usuario usuario = (Usuario)Session["login"];
-            if (usuario != null) {
+            if (usuario != null && id != null) {
                 if ((usuario.RolId == 2) || (usuario.RolId == 3))
                 {
                     ViewBag.ID = id;
@@ -197,7 +273,17 @@ namespace ASPProject.Controllers
                                         Name = a.Nombre,
                                         Descripcion = a.Descripcion,
                                         Contenido = (a.Contenido != null) ? a.Contenido : "",
-                                        activo = false
+                                        activo = false,
+                                        Archivos = App.ContenidoCursoMultimedia.ToList()
+                                            .Where(b => b.ContenidoCursoId == a.ContenidoCursoId)
+                                            .Select(b => new MyNultiEstructura {
+                                                ID = b.ContenidoCursoMultimediaId,
+                                                Nombre = b.Nombre,
+                                                IDContenido = b.ContenidoCursoId,
+                                                IDMulti = b.MultimediaId,
+                                                Multimedia = App.Multimedia.Find(b.MultimediaId).Nombre,
+                                                Ruta = b.Archivo
+                                            }).ToList()
                                     })
                                     .ToList(),
                        }).First();
@@ -227,7 +313,18 @@ namespace ASPProject.Controllers
                                 Name = a.Nombre,
                                 Descripcion = a.Descripcion,
                                 Contenido = (a.Contenido != null) ? a.Contenido : "",
-                                activo = false
+                                activo = false,
+                                Archivos = App.ContenidoCursoMultimedia.ToList()
+                                            .Where(b => b.ContenidoCursoId == a.ContenidoCursoId)
+                                            .Select(b => new MyNultiEstructura
+                                            {
+                                                ID = b.ContenidoCursoMultimediaId,
+                                                Nombre = b.Nombre,
+                                                IDContenido = b.ContenidoCursoId,
+                                                IDMulti = b.MultimediaId,
+                                                Multimedia = App.Multimedia.Find(b.MultimediaId).Nombre,
+                                                Ruta = b.Archivo
+                                            }).ToList()
                             }).ToList();
                 result = new { valido = true, tipo = 0, datos = Datos };
             } else result = new { valido = false, tipo = 1, datos = new List<CCurso>() };
@@ -252,7 +349,18 @@ namespace ASPProject.Controllers
                                 Name = a.Nombre,
                                 Descripcion = a.Descripcion,
                                 Contenido = (a.Contenido != null) ? a.Contenido : "",
-                                activo = false
+                                activo = false,
+                                Archivos = App.ContenidoCursoMultimedia.ToList()
+                                            .Where(b => b.ContenidoCursoId == a.ContenidoCursoId)
+                                            .Select(b => new MyNultiEstructura
+                                            {
+                                                ID = b.ContenidoCursoMultimediaId,
+                                                Nombre = b.Nombre,
+                                                IDContenido = b.ContenidoCursoId,
+                                                IDMulti = b.MultimediaId,
+                                                Multimedia = App.Multimedia.Find(b.MultimediaId).Nombre,
+                                                Ruta = b.Archivo
+                                            }).ToList()
                             }).ToList();
                 result = new { valido = true, tipo = 0, datos = Datos };
             } else result = new { valido = false, tipo = 1, datos = new List<CCurso>() };
@@ -272,8 +380,85 @@ namespace ASPProject.Controllers
                                     Nombre = n.Nombre,
                                     IDContenido = n.ContenidoCursoId,
                                     IDMulti = n.MultimediaId,
-                                    Multimedia = App.Multimedia.Find(n.MultimediaId).Nombre
+                                    Multimedia = App.Multimedia.Find(n.MultimediaId).Nombre,
+                                    Ruta = n.Archivo
                             }).ToList();
+            result = new { valido = true, tipo = 0, datos = Datos };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        //      SET CONTENIDO MULTIMEDIA
+        public ActionResult AddCMultimedia([Bind(Include = "ContenidoCursoMultimediaId,Nombre,Archivo", Exclude = "ContenidoCursoId,MultimediaId")] ContenidoCursoMultimedia contenidoCursoMultimedia, HttpPostedFileBase upload, int ContenidoCursoIdA, int MultimediaIdA)
+        {
+            Usuario usuario = (Usuario)Session["login"];
+            var result = new { valido = false, tipo = 0, datos = new List<MyNultiEstructura>() };
+            if (ModelState.IsValid)
+            {
+                var fileName = Path.GetFileName(upload.FileName);
+                fileName = upload.ContentType;
+
+                string[] partes = fileName.Split('/');
+                string extension = partes[1];
+                fileName = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + "_" + 1 + "." + extension;
+                var path = Path.Combine(Server.MapPath("~/Archivos"), fileName);
+                upload.SaveAs(path);
+                string ruta = "http://" + Request.Url.Authority + "/Archivos/" + fileName;
+                contenidoCursoMultimedia.Archivo = ruta;
+                contenidoCursoMultimedia.ContenidoCursoId = ContenidoCursoIdA;
+                contenidoCursoMultimedia.MultimediaId = MultimediaIdA;
+
+                App.ContenidoCursoMultimedia.Add(contenidoCursoMultimedia);
+                App.SaveChanges();
+                List<MyNultiEstructura> Datos = App.ContenidoCursoMultimedia.ToList()
+                            .Where(n => n.ContenidoCursoId == contenidoCursoMultimedia.ContenidoCursoId)
+                            .Select(n => new MyNultiEstructura
+                            {
+                                ID = n.ContenidoCursoMultimediaId,
+                                Nombre = n.Nombre,
+                                IDContenido = n.ContenidoCursoId,
+                                IDMulti = n.MultimediaId,
+                                Multimedia = App.Multimedia.Find(n.MultimediaId).Nombre,
+                                Ruta = n.Archivo
+                            }).ToList();
+                result = new { valido = true, tipo = 0, datos = Datos };
+            } else result = new { valido = false, tipo = 1, datos = new List<MyNultiEstructura>() };
+            return Json(result);
+        }
+        //      UPDATE CONTENIDO MULTIMEDIA
+        public ActionResult DelCMultimedia (int ID, int IDTema)
+        {
+            Usuario usuario = (Usuario)Session["login"];
+            var result = new { valido = false, tipo = 0, datos = new List<MyNultiEstructura>() };
+            ContenidoCursoMultimedia contenidoCursoMultimedia = App.ContenidoCursoMultimedia.Find(ID);
+            if (contenidoCursoMultimedia != null)
+            {
+                App.ContenidoCursoMultimedia.Remove(contenidoCursoMultimedia);
+                App.SaveChanges();
+            }
+            List<MyNultiEstructura> Datos = App.ContenidoCursoMultimedia.ToList()
+                            .Where(n => n.ContenidoCursoId == IDTema)
+                            .Select(n => new MyNultiEstructura
+                            {
+                                ID = n.ContenidoCursoMultimediaId,
+                                Nombre = n.Nombre,
+                                IDContenido = n.ContenidoCursoId,
+                                IDMulti = n.MultimediaId,
+                                Multimedia = App.Multimedia.Find(n.MultimediaId).Nombre,
+                                Ruta = n.Archivo
+                            }).ToList();
+            result = new { valido = true, tipo = 0, datos = Datos };
+            return Json(result);
+        }
+        //      GET MULTIMEDIAS DISPONIBLES
+        public ActionResult GMultimedias ()
+        {
+            Usuario usuario = (Usuario)Session["login"];
+            var result = new { valido = false, tipo = 0, datos = new List<MultiEstructura>() };
+            List<MultiEstructura> Datos = App.Multimedia.ToList()
+                .Select(n => new MultiEstructura {
+                    ID = n.MultimediaId,
+                    Name = n.Nombre,
+                    Extension = n.Extension
+                }).ToList();
             result = new { valido = true, tipo = 0, datos = Datos };
             return Json(result, JsonRequestBehavior.AllowGet);
         }

@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "Detalle del Curso";
+}
+
+<div id="app">
+    <h2>{{Dato.Nombre}}</h2>
+    <div class="row mb-2">
+        <div class="col-md-5 p-0">
+            <img :src="Dato.Imagen" :alt="Dato.Nombre" width="100%" height="300" :title="Dato.Nombre" />
+        </div>
+        <div class="col-md-7 p-0">
+            <div class="col-md-12 categoria-curso"><strong>Categoria:</strong> {{Dato.Categoria}}</div>
+            <div class="col-md-12"><strong>Descripción:</strong> {{Dato.Descripcion}}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 d-flex justify-content-end rounded-pill btn bg-dark text-white">
+            <div class="flex-grow-1 d-flex justify-content-center">
+                <div class="text-center"><strong>Contenidos</strong></div>
+            </div>
+        </div>
+        <div class="col-md-8 d-flex justify-content-end rounded-pill btn border border-dark bg-gris-claro">
+            <div class="flex-grow-1 d-flex justify-content-center">
+                <div class="text-center"><strong>Archivos Multimedia</strong></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--    TEMA    -->
+        <div class="col-md-4 p-0">
+            <div v-for="dato in Dato.Temas" class="d-flex justify-content-end rounded tema bg-light" v-bind:class="{'tema-activo': dato.activo}">
+                <div class="flex-grow-1 d-flex justify-content-center" v-on:click="selectContenido(dato)">
+                    <div class="text-center"><strong>{{dato.Name}}</strong></div>
+                </div>
+            </div>
+        </div>
+        <!--    MULTIMEDIAS    -->
+        <div class="col-md-8 p-0">
+            <div v-if="Dato.TemaActual.selected">
+                <div class="m-1 rounded border border-dark">
+                    <div><strong>Descripción: </strong>{{Dato.TemaActual.data.Descripcion}}</div>
+                    <div><strong>Contenido: </strong>{{Dato.TemaActual.data.Contenido}}</div>
+                </div>
+                <div>
+                    <div v-for="archivo in Dato.TemaActual.Archivos">
+                        <div class="m-1 d-flex bd-highlight rounded multimedia">
+                            <div v-if="archivo.IDMulti == 1" class="p-2 bd-highlight">
+                                <img src="~/Imagenes/icons/pdf.png" height="30" width="30">
+                            </div>
+                            <div v-else class="p-2 bd-highlight">
+                                <img :src="archivo.Ruta" height="30" width="30">
+                            </div>
+                            <div class="p-2 flex-grow-1 bd-highlight"><a :href="archivo.Ruta" target="_blank">{{archivo.Nombre}}</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>const valID = @ViewBag.ID</script>
+@Scripts.Render("~/Scripts/v4/Cursos/Detalle.js")

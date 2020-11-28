@@ -39,6 +39,15 @@
 .tema-activo {
     background-color: #29b6f6 !important;
 }
+
+.multimedia {
+}
+.multimedia:hover {
+    box-shadow: 0 0.5rem 2rem rgba(50,115,255,2.5) !important;
+}
+.btn-del {
+    cursor: pointer;
+}
 /*  FONDOS */
 .bg-gris-claro {
     background-color: #bdbdbd;

@@ -110,6 +110,8 @@
                         if (!resp.valido && resp.tipo == 2) {
                             Elemento.Registro.correo.invalido = true;
                             Elemento.Registro.correo.error = 'Correo ya existente';
+                        } else if (resp.valido) {
+                            window.open('/Home', '_self');
                         }
                     })
                     .catch(function (error) {

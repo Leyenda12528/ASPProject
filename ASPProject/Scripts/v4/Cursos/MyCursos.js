@@ -37,7 +37,7 @@
                     ext: '.png, .jpg, .jpeg',
                     filehover: false,
                     src: null,
-                    max: 900,
+                    max: 3000,
                     valor: null,
                     error: true,
                     nombre: '',
@@ -214,7 +214,7 @@
         preimage: function (file, tipo) {
             //e.target.files || e.dataTransfer.files;
             let valor = (tipo != null) ? file.target.files[0] : file.dataTransfer.files[0];
-            //console.log(valor)
+            console.log(valor)
             if ((valor.size / 1024) < this.Modal.dato.imagen.max) {
                 this.Modal.dato.imagen.src = URL.createObjectURL(valor);
                 this.Modal.dato.imagen.valor = valor;
